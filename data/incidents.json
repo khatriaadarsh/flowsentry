@@ -1,0 +1,153 @@
+[
+  {
+    "id": "INC-8021",
+    "title": "Payment Settlement Timeout on Ledger DB",
+    "timestamp": "2026-10-24T06:14:22Z",
+    "severity": "CRITICAL",
+    "primaryService": "banking-service",
+    "affectedServices": ["banking-service", "core-database"],
+    "summary": "High latency and connection pool exhaustion observed on Core Settlement DB causing transaction rollback cascades.",
+    "serviceStatuses": {
+      "payment-api": "Degraded",
+      "iib-ace": "Degraded",
+      "msg-queue": "Healthy",
+      "banking-service": "Degraded",
+      "core-database": "Failed"
+    },
+    "logs": [
+      {
+        "id": "LOG-101",
+        "timestamp": "2026-10-24T06:11:05Z",
+        "service": "payment-api",
+        "level": "INFO",
+        "message": "POST /v2/payments received. Payload hash: 9a3f2b, client: CheckoutFrontend"
+      },
+      {
+        "id": "LOG-102",
+        "timestamp": "2026-10-24T06:11:06Z",
+        "service": "iib-ace",
+        "level": "INFO",
+        "message": "Transforming ISO8583 payload to canonical XML format. Flow: PaymentRoutingFlow.subflow"
+      },
+      {
+        "id": "LOG-103",
+        "timestamp": "2026-10-24T06:11:06Z",
+        "service": "msg-queue",
+        "level": "INFO",
+        "message": "Message ENQUEUED: Queue=PAYMENT.SETTLEMENT.IN, CorrelationId=CORR-992144"
+      },
+      {
+        "id": "LOG-104",
+        "timestamp": "2026-10-24T06:12:35Z",
+        "service": "banking-service",
+        "level": "WARN",
+        "message": "HikariPool-1 - Connection is not available, request timed out after 30002ms (active=50, idle=0, waiting=12)"
+      },
+      {
+        "id": "LOG-105",
+        "timestamp": "2026-10-24T06:13:01Z",
+        "service": "banking-service",
+        "level": "ERROR",
+        "message": "SQLException: Connection refused: org.postgresql.util.PSQLException: FATAL: remaining connection slots are reserved for non-replication superuser connections"
+      },
+      {
+        "id": "LOG-106",
+        "timestamp": "2026-10-24T06:13:05Z",
+        "service": "banking-service",
+        "level": "ERROR",
+        "message": "Failed to acquire lock on table ledger_accounts; Lock acquisition timed out for Tx 88319"
+      },
+      {
+        "id": "LOG-107",
+        "timestamp": "2026-10-24T06:13:10Z",
+        "service": "payment-api",
+        "level": "ERROR",
+        "message": "HTTP 504 Gateway Timeout returned to client after 60000ms threshold reached."
+      }
+    ],
+    "knownFailures": [
+      {
+        "timestamp": "2026-10-24T06:10:00Z",
+        "errorType": "HikariPool-1 Exhaustion",
+        "count": 42
+      },
+      {
+        "timestamp": "2026-10-24T06:12:00Z",
+        "errorType": "Database Lock Timeout",
+        "count": 18
+      }
+    ]
+  },
+  {
+    "id": "INC-8022",
+    "title": "Persistent Queue Backlog & Poison Message Delivery Failure",
+    "timestamp": "2026-10-24T07:22:10Z",
+    "severity": "HIGH",
+    "primaryService": "msg-queue",
+    "affectedServices": ["msg-queue", "banking-service"],
+    "summary": "Messages failing delivery retry thresholds and accumulating in queue due to unparseable XML schema mismatch.",
+    "serviceStatuses": {
+      "payment-api": "Healthy",
+      "iib-ace": "Degraded",
+      "msg-queue": "Failed",
+      "banking-service": "Healthy",
+      "core-database": "Healthy"
+    },
+    "logs": [
+      {
+        "id": "LOG-201",
+        "timestamp": "2026-10-24T07:20:00Z",
+        "service": "payment-api",
+        "level": "INFO",
+        "message": "Dispatched transaction batch BATCH-442 to integration bus."
+      },
+      {
+        "id": "LOG-202",
+        "timestamp": "2026-10-24T07:20:02Z",
+        "service": "iib-ace",
+        "level": "WARN",
+        "message": "BIP2628W: Exception condition detected on input node 'PAYMENT_IN'. Schema validation bypassed under fallback rule."
+      },
+      {
+        "id": "LOG-203",
+        "timestamp": "2026-10-24T07:20:05Z",
+        "service": "msg-queue",
+        "level": "INFO",
+        "message": "Delivery attempted for MsgId=MQ-990021 to consumer BankingService-Worker-3"
+      },
+      {
+        "id": "LOG-204",
+        "timestamp": "2026-10-24T07:20:06Z",
+        "service": "banking-service",
+        "level": "ERROR",
+        "message": "SAXParseException: cvc-complex-type.2.4.a: Invalid content was found starting with element 'SettlementCurrencyId'."
+      },
+      {
+        "id": "LOG-205",
+        "timestamp": "2026-10-24T07:20:12Z",
+        "service": "msg-queue",
+        "level": "WARN",
+        "message": "Backout count reached threshold (5/5) for MsgId=MQ-990021. Moving message to dead-letter queue DEAD.LETTER.QUEUE."
+      },
+      {
+        "id": "LOG-206",
+        "timestamp": "2026-10-24T07:21:00Z",
+        "service": "msg-queue",
+        "level": "ERROR",
+        "message": "DEAD.LETTER.QUEUE full (depth=5000/5000 max). Further poisoned messages are stalled in main pipeline."
+      }
+    ],
+    "knownFailures": [
+      {
+        "timestamp": "2026-10-24T07:18:00Z",
+        "errorType": "SchemaValidationFailure",
+        "count": 67
+      },
+      {
+        "timestamp": "2026-10-24T07:20:00Z",
+        "errorType": "DeadLetterQueueOverflow",
+        "count": 12
+      }
+    ]
+  }
+]

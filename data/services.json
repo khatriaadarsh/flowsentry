@@ -1,0 +1,37 @@
+[
+  {
+    "id": "payment-api",
+    "name": "Payment API",
+    "type": "Gateway",
+    "upstream": null,
+    "downstream": "iib-ace"
+  },
+  {
+    "id": "iib-ace",
+    "name": "IBM IIB / ACE",
+    "type": "Enterprise Service Bus",
+    "upstream": "payment-api",
+    "downstream": "msg-queue"
+  },
+  {
+    "id": "msg-queue",
+    "name": "Message Queue (MQ)",
+    "type": "Broker",
+    "upstream": "iib-ace",
+    "downstream": "banking-service"
+  },
+  {
+    "id": "banking-service",
+    "name": "Banking Service",
+    "type": "Core Ledger Service",
+    "upstream": "msg-queue",
+    "downstream": "core-database"
+  },
+  {
+    "id": "core-database",
+    "name": "Core Settlement DB",
+    "type": "Relational Database",
+    "upstream": "banking-service",
+    "downstream": null
+  }
+]
