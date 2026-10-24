@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # FlowSentry
 
 FlowSentry is an incident-response dashboard for investigating service disruptions across an integration flow. It includes sample incidents, service-health signals, diagnostic endpoints, a rule-based diagnosis engine, and optional Gemma-powered analysis.
