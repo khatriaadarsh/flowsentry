@@ -16,53 +16,94 @@
     },
     "logs": [
       {
+        "id": "LOG-091",
+        "timestamp": "2026-10-02T08:15:20Z",
+        "service": "banking-service",
+        "level": "INFO",
+        "traceId": "TRC-01182",
+        "message": "Routine ledger index defragmentation completed in 412ms. HikariPool status: active=4, idle=46.",
+        "details": "Table: ledger_accounts. Total index blocks reindexed: 1,420. Maintenance window active."
+      },
+      {
+        "id": "LOG-092",
+        "timestamp": "2026-10-05T14:22:11Z",
+        "service": "core-database",
+        "level": "WARN",
+        "traceId": "TRC-02941",
+        "message": "Autovacuum worker on table 'ledger_accounts' was canceled due to high lock contention from analytical batch job.",
+        "details": "Blocked by PID 4118 (Client: DataWarehouseSync). Query duration prior to cancellation: 180200ms."
+      },
+      {
+        "id": "LOG-093",
+        "timestamp": "2026-10-07T11:05:43Z",
+        "service": "banking-service",
+        "level": "INFO",
+        "traceId": "TRC-03482",
+        "message": "Scheduled weekly connection pool health audit passed. Mean latency: 8.4ms, max connection pool wait: 12ms.",
+        "details": "Pool: HikariPool-1. Current max_connections: 50. Non-superuser reserve slots: 3."
+      },
+      {
         "id": "LOG-101",
         "timestamp": "2026-10-24T06:11:05Z",
         "service": "payment-api",
         "level": "INFO",
-        "message": "POST /v2/payments received. Payload hash: 9a3f2b, client: CheckoutFrontend"
+        "traceId": "TRC-88319",
+        "message": "POST /v2/payments received. Payload hash: 9a3f2b, client: CheckoutFrontend, amount: 450.00 USD.",
+        "details": "Headers: { X-Correlation-ID: CORR-992144, X-Idempotency-Key: IDEM-48201 }. Gateway latency: 2.1ms."
       },
       {
         "id": "LOG-102",
         "timestamp": "2026-10-24T06:11:06Z",
         "service": "iib-ace",
         "level": "INFO",
-        "message": "Transforming ISO8583 payload to canonical XML format. Flow: PaymentRoutingFlow.subflow"
+        "traceId": "TRC-88319",
+        "message": "Transforming ISO8583 payload to canonical XML format. Flow: PaymentRoutingFlow.subflow",
+        "details": "MessageBroker Engine: IBM App Connect Enterprise v12.0.8. Inbound message size: 4.2 KB."
       },
       {
         "id": "LOG-103",
         "timestamp": "2026-10-24T06:11:06Z",
         "service": "msg-queue",
         "level": "INFO",
-        "message": "Message ENQUEUED: Queue=PAYMENT.SETTLEMENT.IN, CorrelationId=CORR-992144"
+        "traceId": "TRC-88319",
+        "message": "Message ENQUEUED: Queue=PAYMENT.SETTLEMENT.IN, CorrelationId=CORR-992144",
+        "details": "Broker persistence: Synchronous syncpoint commit. Message priority: 9."
       },
       {
         "id": "LOG-104",
         "timestamp": "2026-10-24T06:12:35Z",
         "service": "banking-service",
         "level": "WARN",
-        "message": "HikariPool-1 - Connection is not available, request timed out after 30002ms (active=50, idle=0, waiting=12)"
+        "traceId": "TRC-88319",
+        "message": "HikariPool-1 - Connection is not available, request timed out after 30002ms (active=50, idle=0, waiting=12)",
+        "details": "Thread: [pool-2-thread-14]. Pool saturation: 100%. Thread blocked waiting for pooled JDBC physical connection."
       },
       {
         "id": "LOG-105",
         "timestamp": "2026-10-24T06:13:01Z",
         "service": "banking-service",
         "level": "ERROR",
-        "message": "SQLException: Connection refused: org.postgresql.util.PSQLException: FATAL: remaining connection slots are reserved for non-replication superuser connections"
+        "traceId": "TRC-88319",
+        "message": "SQLException: Connection refused: org.postgresql.util.PSQLException: FATAL: remaining connection slots are reserved for non-replication superuser connections",
+        "details": "PostgreSQL error code: 53300 (too_many_connections). Active backend PIDs: 50. Superuser reserved slots: 3."
       },
       {
         "id": "LOG-106",
         "timestamp": "2026-10-24T06:13:05Z",
         "service": "banking-service",
         "level": "ERROR",
-        "message": "Failed to acquire lock on table ledger_accounts; Lock acquisition timed out for Tx 88319"
+        "traceId": "TRC-88319",
+        "message": "Failed to acquire lock on table ledger_accounts; Lock acquisition timed out for Tx 88319",
+        "details": "Lock mode requested: RowExclusiveLock. Blocking PID: 4902. Transaction isolation level: READ_COMMITTED."
       },
       {
         "id": "LOG-107",
         "timestamp": "2026-10-24T06:13:10Z",
         "service": "payment-api",
         "level": "ERROR",
-        "message": "HTTP 504 Gateway Timeout returned to client after 60000ms threshold reached."
+        "traceId": "TRC-88319",
+        "message": "HTTP 504 Gateway Timeout returned to client after 60000ms threshold reached.",
+        "details": "Client: CheckoutFrontend. Origin route: /v2/payments. Total roundtrip time before abort: 60004ms."
       }
     ],
     "knownFailures": [
@@ -95,46 +136,76 @@
     },
     "logs": [
       {
+        "id": "LOG-185",
+        "timestamp": "2026-10-03T09:12:00Z",
+        "service": "iib-ace",
+        "level": "INFO",
+        "traceId": "TRC-01049",
+        "message": "Integration flow hot-reload: PaymentRoutingFlow deployed successfully with schema version 2.4.0.",
+        "details": "Validation mode: STRICT. Input parser: XMLNSC."
+      },
+      {
+        "id": "LOG-186",
+        "timestamp": "2026-10-06T16:45:10Z",
+        "service": "msg-queue",
+        "level": "INFO",
+        "traceId": "TRC-02114",
+        "message": "Queue maintenance completed. DEAD.LETTER.QUEUE depth: 0 messages. Retention policy verified.",
+        "details": "Queue manager: MQ_PROD_01. Maximum queue depth: 5,000."
+      },
+      {
         "id": "LOG-201",
         "timestamp": "2026-10-24T07:20:00Z",
         "service": "payment-api",
         "level": "INFO",
-        "message": "Dispatched transaction batch BATCH-442 to integration bus."
+        "traceId": "TRC-99002",
+        "message": "Dispatched transaction batch BATCH-442 to integration bus.",
+        "details": "Batch size: 120 messages. Total payload: 480 KB."
       },
       {
         "id": "LOG-202",
         "timestamp": "2026-10-24T07:20:02Z",
         "service": "iib-ace",
         "level": "WARN",
-        "message": "BIP2628W: Exception condition detected on input node 'PAYMENT_IN'. Schema validation bypassed under fallback rule."
+        "traceId": "TRC-99002",
+        "message": "BIP2628W: Exception condition detected on input node 'PAYMENT_IN'. Schema validation bypassed under fallback rule.",
+        "details": "Warning code: BIP2628W. Rule applied: SchemaValidationFallback=ALLOW_UNKNOWN_TAGS."
       },
       {
         "id": "LOG-203",
         "timestamp": "2026-10-24T07:20:05Z",
         "service": "msg-queue",
         "level": "INFO",
-        "message": "Delivery attempted for MsgId=MQ-990021 to consumer BankingService-Worker-3"
+        "traceId": "TRC-99002",
+        "message": "Delivery attempted for MsgId=MQ-990021 to consumer BankingService-Worker-3",
+        "details": "Consumer channel: CHANNEL.TCP.SETTLE. Delivery attempt: 1."
       },
       {
         "id": "LOG-204",
         "timestamp": "2026-10-24T07:20:06Z",
         "service": "banking-service",
         "level": "ERROR",
-        "message": "SAXParseException: cvc-complex-type.2.4.a: Invalid content was found starting with element 'SettlementCurrencyId'."
+        "traceId": "TRC-99002",
+        "message": "SAXParseException: cvc-complex-type.2.4.a: Invalid content was found starting with element 'SettlementCurrencyId'.",
+        "details": "Parser: Xerces-J 2.12. Expected child elements: {Amount, AccountNumber, RoutingCode}. Received: SettlementCurrencyId."
       },
       {
         "id": "LOG-205",
         "timestamp": "2026-10-24T07:20:12Z",
         "service": "msg-queue",
         "level": "WARN",
-        "message": "Backout count reached threshold (5/5) for MsgId=MQ-990021. Moving message to dead-letter queue DEAD.LETTER.QUEUE."
+        "traceId": "TRC-99002",
+        "message": "Backout count reached threshold (5/5) for MsgId=MQ-990021. Moving message to dead-letter queue DEAD.LETTER.QUEUE.",
+        "details": "Backout queue destination: DEAD.LETTER.QUEUE. MsgId: MQ-990021."
       },
       {
         "id": "LOG-206",
         "timestamp": "2026-10-24T07:21:00Z",
         "service": "msg-queue",
         "level": "ERROR",
-        "message": "DEAD.LETTER.QUEUE full (depth=5000/5000 max). Further poisoned messages are stalled in main pipeline."
+        "traceId": "TRC-99002",
+        "message": "DEAD.LETTER.QUEUE full (depth=5000/5000 max). Further poisoned messages are stalled in main pipeline.",
+        "details": "Reason code: 2053 (MQRC_Q_FULL). Uncommitted backlog: 142 messages."
       }
     ],
     "knownFailures": [
